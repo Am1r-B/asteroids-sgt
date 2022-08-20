@@ -34,12 +34,20 @@ function love.update(dt)
   shipX = (shipX + shipSpeedX * dt) % arenaWidth
   shipY = (shipY + shipSpeedY * dt) % arenaHeight
   
-  for bulletIndex, bullet in ipairs(bullets) do
-    local bulletSpeed = 500
-    bullet.x = (bullet.x + math.cos(bullet.angle) * bulletSpeed * dt)
-      % arenaWidth
-    bullet.y = (bullet.y + math.sin(bullet.angle) * bulletSpeed * dt)
-      % arenaHeight
+  for bulletIndex = #bullets, 1, -1 do
+    local bullet = bullets[bulletIndex]
+    
+    bullet.timeLeft = bullet.timeLeft - dt
+    
+    if bullet.timeLeft <= 0 then
+      table.remove(bullets, bulletIndex)
+    else
+      local bulletSpeed = 500
+      bullet.x = (bullet.x + math.cos(bullet.angle) * bulletSpeed * dt)
+        % arenaWidth
+      bullet.y = (bullet.y + math.sin(bullet.angle) * bulletSpeed * dt)
+        % arenaHeight
+    end
   end
 end
 
@@ -48,7 +56,8 @@ function love.keypressed(key)
     table.insert(bullets, {
       x = shipX + math.cos(shipAngle) * shipRadius,
       y = shipY + math.sin(shipAngle) * shipRadius,
-      angle = shipAngle
+      angle = shipAngle,
+      timeLeft = 4
     })
   end
 end
