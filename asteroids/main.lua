@@ -2,32 +2,10 @@ function love.load()
   arenaWidth = 800
   arenaHeight = 600
   
-  shipX = arenaWidth / 2
-  shipY = arenaHeight / 2
-  shipAngle = 0
-  shipSpeedX = 0
-  shipSpeedY = 0
   shipRadius = 30
   
-  bullets = {}
   bulletTimerLimit = 0.5
-  bulletTimer = bulletTimerLimit
   bulletRadius = 5
-  
-  asteroids = {
-    {
-      x = 100,
-      y = 100
-    },
-    {
-      x = arenaWidth - 100,
-      y = 100
-    },
-    {
-      x = arenaWidth / 2,
-      y = arenaHeight - 100
-    }
-  }
   
   asteroidStages = {
     {
@@ -48,10 +26,38 @@ function love.load()
     }
   }
   
-  for asteroidIndex, asteroid in ipairs(asteroids) do
-    asteroid.angle = love.math.random() * (2 * math.pi)
-    asteroid.stage = #asteroidStages
+  function reset()
+    shipX = arenaWidth / 2
+    shipY = arenaHeight / 2
+    shipAngle = 0
+    shipSpeedX = 0
+    shipSpeedY = 0
+    
+    bullets = {}
+    bulletTimer = bulletTimerLimit
+    
+    asteroids = {
+      {
+        x = 100,
+        y = 100
+      },
+      {
+        x = arenaWidth - 100,
+        y = 100
+      },
+      {
+        x = arenaWidth / 2,
+        y = arenaHeight - 100
+      }
+    }
+    
+    for asteroidIndex, asteroid in ipairs(asteroids) do
+      asteroid.angle = love.math.random() * (2 * math.pi)
+      asteroid.stage = #asteroidStages
+    end
   end
+  
+  reset()
 end
 
 function love.update(dt)
@@ -154,13 +160,13 @@ function love.update(dt)
       shipX, shipY, shipRadius,
       asteroid.x, asteroid.y, asteroidStages[asteroid.stage].radius
     ) then
-      love.load()
+      reset()
       break
     end
   end
   
   if #asteroids == 0 then
-    love.load()
+    reset()
   end
 end
 
