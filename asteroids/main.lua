@@ -1,6 +1,9 @@
 function love.load()
-  shipX = 800 / 2
-  shipY = 600 / 2
+  arenaWidth = 800
+  arenaHeight = 600
+  
+  shipX = arenaWidth / 2
+  shipY = arenaHeight / 2
   shipAngle = 0
   shipSpeedX = 0
   shipSpeedY = 0
@@ -25,8 +28,8 @@ function love.update(dt)
     shipSpeedY = shipSpeedY + math.sin(shipAngle) * shipSpeed * dt
   end
   
-  shipX = shipX + shipSpeedX * dt
-  shipY = shipY + shipSpeedY * dt
+  shipX = (shipX + shipSpeedX * dt) % arenaWidth
+  shipY = (shipY + shipSpeedY * dt) % arenaHeight
 end
 
 function love.draw()
