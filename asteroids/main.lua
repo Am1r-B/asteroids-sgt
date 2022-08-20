@@ -10,6 +10,8 @@ function love.load()
   shipRadius = 30
   
   bullets = {}
+  bulletTimerLimit = 0.5
+  bulletTimer = bulletTimerLimit
 end
 
 function love.update(dt)
@@ -49,18 +51,25 @@ function love.update(dt)
         % arenaHeight
     end
   end
-end
-
-function love.keypressed(key)
-  if key == 's' then
-    table.insert(bullets, {
-      x = shipX + math.cos(shipAngle) * shipRadius,
-      y = shipY + math.sin(shipAngle) * shipRadius,
-      angle = shipAngle,
-      timeLeft = 4
-    })
+  
+  bulletTimer = bulletTimer + dt
+  
+  if love.keyboard.isDown('s') then
+    if bulletTimer >= bulletTimerLimit then
+      bulletTimer = 0
+      
+      -- Moved
+      table.insert(bullets, {
+        x = shipX + math.cos(shipAngle) * shipRadius,
+        y = shipY + math.sin(shipAngle) * shipRadius,
+        angle = shipAngle,
+        timeLeft = 4
+      })
+    end
   end
 end
+
+-- Removed: function love.keypressed(key)
 
 function love.draw()
   for y = -1, 1 do
