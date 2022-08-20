@@ -52,8 +52,6 @@ function love.load()
     asteroid.angle = love.math.random() * (2 * math.pi)
     asteroid.stage = #asteroidStages
   end
-  
-  -- Removed: asteroidRadius = 80
 end
 
 function love.update(dt)
@@ -147,7 +145,6 @@ function love.update(dt)
   end
   
   for asteroidIndex, asteroid in ipairs(asteroids) do
-    -- Removed: local asteroidSpeed = 20
     asteroid.x = (asteroid.x + math.cos(asteroid.angle)
       * asteroidStages[asteroid.stage].speed * dt) % arenaWidth
     asteroid.y = (asteroid.y + math.sin(asteroid.angle)
@@ -160,6 +157,10 @@ function love.update(dt)
       love.load()
       break
     end
+  end
+  
+  if #asteroids == 0 then
+    love.load()
   end
 end
 
