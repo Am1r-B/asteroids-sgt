@@ -29,11 +29,31 @@ function love.load()
     }
   }
   
+  asteroidStages = {
+    {
+      speed = 120,
+      radius = 15
+    },
+    {
+      speed = 70,
+      radius = 30
+    },
+    {
+      speed = 50,
+      radius = 50
+    },
+    {
+      speed = 20,
+      radius = 80
+    }
+  }
+  
   for asteroidIndex, asteroid in ipairs(asteroids) do
     asteroid.angle = love.math.random() * (2 * math.pi)
+    asteroid.stage = #asteroidStages
   end
   
-  asteroidRadius = 80
+  -- Removed: asteroidRadius = 80
 end
 
 function love.update(dt)
@@ -58,7 +78,6 @@ function love.update(dt)
   shipX = (shipX + shipSpeedX * dt) % arenaWidth
   shipY = (shipY + shipSpeedY * dt) % arenaHeight
   
-  -- Moved
   local function areCirclesIntersecting(aX, aY, aRadius, bX, bY, bRadius)
     return (aX - bX)^2 + (aY - bY)^2 <= (aRadius + bRadius)^2
   end
@@ -82,23 +101,28 @@ function love.update(dt)
         
         if areCirclesIntersecting(
           bullet.x, bullet.y, bulletRadius,
-          asteroid.x, asteroid.y, asteroidRadius
+          asteroid.x, asteroid.y,
+          asteroidStages[asteroid.stage].radius
         ) then
           table.remove(bullets, bulletIndex)
           
-          local angle1 = love.math.random() * (2 * math.pi)
-          local angle2 = (angle1 - math.pi) % (2 * math.pi)
-          
-          table.insert(asteroids, {
-            x = asteroid.x,
-            y = asteroid.y,
-            angle = angle1
-          })
-          table.insert(asteroids, {
-            x = asteroid.x,
-            y = asteroid.y,
-            angle = angle2
-          })
+          if asteroid.stage > 1 then
+            local angle1 = love.math.random() * (2 * math.pi)
+            local angle2 = (angle1 - math.pi) % (2 * math.pi)
+            
+            table.insert(asteroids, {
+              x = asteroid.x,
+              y = asteroid.y,
+              angle = angle1,
+              stage = asteroid.stage - 1
+            })
+            table.insert(asteroids, {
+              x = asteroid.x,
+              y = asteroid.y,
+              angle = angle2,
+              stage = asteroid.stage - 1
+            })
+          end
           
           table.remove(asteroids, asteroidIndex)
           break
@@ -123,15 +147,15 @@ function love.update(dt)
   end
   
   for asteroidIndex, asteroid in ipairs(asteroids) do
-    local asteroidSpeed = 20
+    -- Removed: local asteroidSpeed = 20
     asteroid.x = (asteroid.x + math.cos(asteroid.angle)
-      * asteroidSpeed * dt) % arenaWidth
+      * asteroidStages[asteroid.stage].speed * dt) % arenaWidth
     asteroid.y = (asteroid.y + math.sin(asteroid.angle)
-      * asteroidSpeed * dt) % arenaHeight
+      * asteroidStages[asteroid.stage].speed * dt) % arenaHeight
     
     if areCirclesIntersecting(
       shipX, shipY, shipRadius,
-      asteroid.x, asteroid.y, asteroidRadius
+      asteroid.x, asteroid.y, asteroidStages[asteroid.stage].radius
     ) then
       love.load()
       break
@@ -165,7 +189,7 @@ function love.draw()
       for asteroidIndex, asteroid in ipairs(asteroids) do
         love.graphics.setColor(1, 1, 0)
         love.graphics.circle('fill', asteroid.x, asteroid.y,
-          asteroidRadius)
+          asteroidStages[asteroid.stage].radius)
       end
     end
   end
