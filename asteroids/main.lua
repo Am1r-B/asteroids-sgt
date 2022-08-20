@@ -27,6 +27,10 @@ function love.load()
       y = arenaHeight - 100
     }
   }
+  
+  for asteroidIndex, asteroid in ipairs(asteroids) do
+    asteroid.angle = love.math.random() * (2 * math.pi)
+  end
 end
 
 function love.update(dt)
@@ -80,6 +84,14 @@ function love.update(dt)
         timeLeft = 4
       })
     end
+  end
+  
+  for asteroidIndex, asteroid in ipairs(asteroids) do
+    local asteroidSpeed = 20
+    asteroid.x = (asteroid.x + math.cos(asteroid.angle)
+      * asteroidSpeed * dt) % arenaWidth
+    asteroid.y = (asteroid.y + math.sin(asteroid.angle)
+      * asteroidSpeed * dt) % arenaHeight
   end
 end
 
