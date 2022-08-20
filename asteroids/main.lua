@@ -7,6 +7,8 @@ function love.load()
   shipAngle = 0
   shipSpeedX = 0
   shipSpeedY = 0
+  
+  bullets = {}
 end
 
 function love.update(dt)
@@ -32,6 +34,15 @@ function love.update(dt)
   shipY = (shipY + shipSpeedY * dt) % arenaHeight
 end
 
+function love.keypressed(key)
+  if key == 's' then
+    table.insert(bullets, {
+      x = shipX,
+      y = shipY
+    })
+  end
+end
+
 function love.draw()
   for y = -1, 1 do
     for x = -1, 1 do
@@ -49,17 +60,11 @@ function love.draw()
         shipY + math.sin(shipAngle) * shipCircleDistance,
         5
       )
+      
+      for bulletIndex, bullet in ipairs(bullets) do
+        love.graphics.setColor(0, 1, 0)
+        love.graphics.circle('fill', bullet.x, bullet.y, 5)
+      end
     end
   end
-  
-  -- Temporary
-  love.graphics.origin()
-  love.graphics.setColor(1, 1, 1)
-  love.graphics.print(table.concat({
-    'shipAngle: '..shipAngle,
-    'shipX: '..shipX,
-    'shipY: '..shipY,
-    'shipSpeedX: '..shipSpeedX,
-    'shipSpeedY: '..shipSpeedY
-  }, '\n'))
 end
