@@ -14,6 +14,8 @@ function love.update(dt)
   if love.keyboard.isDown('left') then
     shipAngle = shipAngle - turnSpeed * dt
   end
+  
+  shipAngle = shipAngle % (2 * math.pi)
 end
 
 function love.draw()
