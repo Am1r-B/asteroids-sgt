@@ -5,8 +5,14 @@ function love.load()
 end
 
 function love.update(dt)
+  local turnSpeed = 10
+  
   if love.keyboard.isDown('right') then
-    shipAngle = shipAngle + 10 * dt
+    shipAngle = shipAngle + turnSpeed * dt
+  end
+  
+  if love.keyboard.isDown('left') then
+    shipAngle = shipAngle - turnSpeed * dt
   end
 end
 
