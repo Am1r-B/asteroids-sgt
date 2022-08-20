@@ -85,6 +85,21 @@ function love.update(dt)
           asteroid.x, asteroid.y, asteroidRadius
         ) then
           table.remove(bullets, bulletIndex)
+          
+          local angle1 = love.math.random() * (2 * math.pi)
+          local angle2 = (angle1 - math.pi) % (2 * math.pi)
+          
+          table.insert(asteroids, {
+            x = asteroid.x,
+            y = asteroid.y,
+            angle = angle1
+          })
+          table.insert(asteroids, {
+            x = asteroid.x,
+            y = asteroid.y,
+            angle = angle2
+          })
+          
           table.remove(asteroids, asteroidIndex)
           break
         end
