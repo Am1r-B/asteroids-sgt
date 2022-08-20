@@ -12,6 +12,21 @@ function love.load()
   bullets = {}
   bulletTimerLimit = 0.5
   bulletTimer = bulletTimerLimit
+  
+  asteroids = {
+    {
+      x = 100,
+      y = 100
+    },
+    {
+      x = arenaWidth - 100,
+      y = 100
+    },
+    {
+      x = arenaWidth / 2,
+      y = arenaHeight - 100
+    }
+  }
 end
 
 function love.update(dt)
@@ -58,7 +73,6 @@ function love.update(dt)
     if bulletTimer >= bulletTimerLimit then
       bulletTimer = 0
       
-      -- Moved
       table.insert(bullets, {
         x = shipX + math.cos(shipAngle) * shipRadius,
         y = shipY + math.sin(shipAngle) * shipRadius,
@@ -68,8 +82,6 @@ function love.update(dt)
     end
   end
 end
-
--- Removed: function love.keypressed(key)
 
 function love.draw()
   for y = -1, 1 do
@@ -92,6 +104,11 @@ function love.draw()
       for bulletIndex, bullet in ipairs(bullets) do
         love.graphics.setColor(0, 1, 0)
         love.graphics.circle('fill', bullet.x, bullet.y, 5)
+      end
+      
+      for asteroidIndex, asteroid in ipairs(asteroids) do
+        love.graphics.setColor(1, 1, 0)
+        love.graphics.circle('fill', asteroid.x, asteroid.y, 80)
       end
     end
   end
